@@ -10,7 +10,7 @@ module Compass
         def_delegators :rows, :[]
 
         def initialize(images)
-          @images = images
+          @images = images.sort
           @rows = []
         end
 

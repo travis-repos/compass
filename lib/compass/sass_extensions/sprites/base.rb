@@ -70,9 +70,7 @@ module Compass
         # Calculates the overal image dimensions
         # collects image sizes and input parameters for each sprite
         def compute_image_positions!
-          imgs = @images.sort { |a,b| a.width <=> b.width }
-
-          fitter = ::Compass::SassExtensions::Sprites::RowFitter.new(imgs)
+          fitter = ::Compass::SassExtensions::Sprites::RowFitter.new(@images)
 
           current_y = 0
           fitter.fit!.each do |row|

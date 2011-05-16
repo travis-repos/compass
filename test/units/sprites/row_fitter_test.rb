@@ -14,7 +14,11 @@ class RowFitterTest < Test::Unit::TestCase
   end
 
   def create_images(dims)
-    dims.collect { |width, height| stub(:width => width, :height => height) }
+    dims.collect { |width, height| 
+      image = Compass::SassExtensions::Sprites::Image.new('blah', 'blah', {})
+      image.stubs(:width => width, :height => height)
+      image
+    }
   end
 
   def basic_dims
@@ -22,8 +26,8 @@ class RowFitterTest < Test::Unit::TestCase
       [ 100, 10 ],
       [ 80, 10 ],
       [ 50, 10 ],
-      [ 20, 10 ],
-      [ 35, 10 ]
+      [ 35, 10 ],
+      [ 20, 10 ]
     ]
   end
 
@@ -53,30 +57,8 @@ class RowFitterTest < Test::Unit::TestCase
     assert_equal 3, row_fitter.rows.length
 
     assert_equal [ images[0] ], row_fitter[0].images
-    assert_equal [ images[1], images[3] ], row_fitter[1].images
-    assert_equal [ images[2], images[4] ], row_fitter[2].images
-  end
-
-  it 'should use the scan placement algorithm and get images from the front' do
-    images = create_images(
-      [
-        [ 100, 10 ],
-        [ 35, 10 ],
-        [ 80, 10 ],
-        [ 50, 10 ],
-        [ 20, 10 ],
-      ]
-    )
-
-    row_fitter(images)
-
-    row_fitter.fit!(:scan)
-
-    assert_equal 3, row_fitter.rows.length
-
-    assert_equal [ images[0] ], row_fitter[0].images
-    assert_equal [ images[1], images[3] ], row_fitter[1].images
-    assert_equal [ images[2], images[4] ], row_fitter[2].images
+    assert_equal [ images[1], images[4] ], row_fitter[1].images
+    assert_equal [ images[2], images[3] ], row_fitter[2].images
   end
 end
 

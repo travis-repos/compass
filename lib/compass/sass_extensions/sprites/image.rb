@@ -107,7 +107,10 @@ module Compass
             base.image_for($1)
           end
         end
-        
+
+        def <=>(other)
+          other.width <=> self.width
+        end
                 
         private
           def dimensions
