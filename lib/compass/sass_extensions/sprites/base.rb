@@ -73,10 +73,9 @@ module Compass
           imgs = @images.sort { |a,b| a.width <=> b.width }
 
           fitter = ::Compass::SassExtensions::Sprites::RowFitter.new(imgs)
-          rows = fitter.fit!
 
           current_y = 0
-          rows.each do |row|
+          fitter.fit!.each do |row|
             current_x = 0
             row.images.each_with_index do |image, index|
               image.left = current_x
