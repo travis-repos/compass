@@ -49,4 +49,8 @@ class ImageRowTest < Test::Unit::TestCase
     assert_equal 40, @image_row.height
   end
   
+  it "should have an efficiency rating" do
+    populate_row
+    assert_equal 1 - (580.0 / 1000.0), @image_row.efficiency
+  end
 end

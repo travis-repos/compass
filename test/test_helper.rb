@@ -21,7 +21,7 @@ require 'rubygems' if need_gems
 require 'compass'
 
 require 'test/unit'
-
+require 'mocha'
 
 %w(command_line diff io rails test_case).each do |helper|
   require "helpers/#{helper}"
