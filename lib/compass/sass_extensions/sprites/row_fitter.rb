@@ -8,6 +8,7 @@ module Compass
 
         attr_reader :images, :rows
         def_delegators :rows, :[]
+
         def initialize(images)
           @images = images
           @rows = []
@@ -15,6 +16,7 @@ module Compass
 
         def fit!(style = :scan)
           send("#{style}_fit")
+          @rows
         end
 
         def width

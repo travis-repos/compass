@@ -71,16 +71,10 @@ module Compass
         # collects image sizes and input parameters for each sprite
         def compute_image_positions!
           imgs = @images.sort { |a,b| a.width <=> b.width }
-          rows = [::Compass::SassExtensions::Sprites::ImageRow.new(@width)]
-          imgs.each do |image|
-            next if rows.last.add(image)
-            
-            rows << ::Compass::SassExtensions::Sprites::ImageRow.new(@width)
-            unless rows.last.add(image)
-              raise "Image failed to be added"
-            end
-            
-          end
+
+          fitter = ::Compass::SassExtensions::Sprites::RowFitter.new(imgs)
+          rows = fitter.fit!
+
           current_y = 0
           rows.each do |row|
             current_x = 0
