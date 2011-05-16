@@ -70,12 +70,36 @@ module Compass
         # Calculates the overal image dimensions
         # collects image sizes and input parameters for each sprite
         def compute_image_positions!
-          @images.each_with_index do |image, index|
-            image.left = image.position.unit_str == "%" ? (@width - image.width) * (image.position.value / 100) : image.position.value
-            next if index == 0
-            last_image = @images[index-1]
-            image.top = last_image.top + last_image.height + [image.spacing,  last_image.spacing].max
+          imgs = @images.sort { |a,b| a.width <=> b.width }
+          rows = [::Compass::SassExtensions::Sprites::ImageRow.new(@width)]
+          imgs.each do |image|
+            next if rows.last.add(image)
+            
+            rows << ::Compass::SassExtensions::Sprites::ImageRow.new(@width)
+            unless rows.last.add(image)
+              raise "Image failed to be added"
+            end
+            
           end
+          current_y = 0
+          rows.each do |row|
+            current_x = 0
+            row.images.each_with_index do |image, index|
+              image.left = current_x
+              image.top = current_y
+              current_x += image.width
+              image.left = image.position.unit_str == "%" ? (@width - image.width) * (image.position.value / 100) : image.position.value
+            end
+            current_y += row.height
+          end
+          
+          # @images.each_with_index do |image, index|
+          #   image.left = image.position.unit_str == "%" ? (@width - image.width) * (image.position.value / 100) : image.position.value
+          #   next if index == 0
+          #   last_image = @images[index-1]
+          #   image.top = last_image.top + last_image.height + [image.spacing,  last_image.spacing].max
+          #   last_image = image
+          # end
         end
         
         # Fetches the Sprite::Image object for the supplied name
