@@ -604,4 +604,37 @@ class SpritesTest < Test::Unit::TestCase
     CSS
   end
 
+  it "should generate a sprite using smart packing" do
+    css = render <<-SCSS
+      $image_row-smart-pack: true;
+      @import "image_row/*.png";
+      @include all-image_row-sprites;
+    SCSS
+    assert_correct css, <<-CSS
+      .image_row-sprite, .image_row-large, .image_row-large_square, .image_row-medium, .image_row-small, .image_row-tall {
+        background: url('/image_row-7738758b32.png') no-repeat;
+      }
+      
+      .image_row-large {
+        background-position: 0 0;
+      }
+      
+      .image_row-large_square {
+        background-position: -100px -20px;
+      }
+      
+      .image_row-medium {
+        background-position: 0 -20px;
+      }
+      
+      .image_row-small {
+        background-position: -140px -20px;
+      }
+      
+      .image_row-tall {
+        background-position: -160px -20px;
+      }
+    CSS
+  end
+
 end

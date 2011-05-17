@@ -4,7 +4,6 @@ module Compass
       module Processing
         def smart_packing
           fitter = ::Compass::SassExtensions::Sprites::RowFitter.new(@images)
-
           current_y = 0
           fitter.fit!.each do |row|
             current_x = 0
@@ -12,10 +11,9 @@ module Compass
               image.left = current_x
               image.top = current_y
               current_x += image.width
-              image.left = image.position.unit_str == "%" ? (@width - image.width) * (image.position.value / 100) : image.position.value
             end
             current_y += row.height
-          end
+          end          
         end
         
         
