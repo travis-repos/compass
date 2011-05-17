@@ -1,8 +1,11 @@
+require 'compass/sass_extensions/sprites/helpers/image_helper'
+require 'compass/sass_extensions/sprites/helpers/processing_helper'
 module Compass
   module SassExtensions
     module Sprites
       class Base < Sass::Script::Literal
-        
+        include ImageHelper
+        include ProcessingHelper
         
         # Initialize a new aprite object from a relative file path
         # the path is relative to the <tt>images_path</tt> confguration option
@@ -34,6 +37,7 @@ module Compass
           @name = sprite_map.name
           @kwargs = kwargs
           @kwargs['cleanup'] ||= Sass::Script::Bool.new(true)
+          @kwargs['smart_pack'] ||= Sass::Script::Bool.new(false)
           @images = nil
           @width = nil
           @height = nil
@@ -43,10 +47,7 @@ module Compass
           compute_image_metadata!
         end
 
-        # Calculate the size of the sprite
-        def size
-          [width, height]
-        end
+       
       
         # Calculates the overal image dimensions
         # collects image sizes and input parameters for each sprite
@@ -70,54 +71,14 @@ module Compass
         # Calculates the overal image dimensions
         # collects image sizes and input parameters for each sprite
         def compute_image_positions!
-          fitter = ::Compass::SassExtensions::Sprites::RowFitter.new(@images)
-
-          current_y = 0
-          fitter.fit!.each do |row|
-            current_x = 0
-            row.images.each_with_index do |image, index|
-              image.left = current_x
-              image.top = current_y
-              current_x += image.width
-              image.left = image.position.unit_str == "%" ? (@width - image.width) * (image.position.value / 100) : image.position.value
-            end
-            current_y += row.height
+          if kwargs.get_var('smart-pack').value
+            smart_packing
+          else
+            legacy_packing
           end
-          
-          # @images.each_with_index do |image, index|
-          #   image.left = image.position.unit_str == "%" ? (@width - image.width) * (image.position.value / 100) : image.position.value
-          #   next if index == 0
-          #   last_image = @images[index-1]
-          #   image.top = last_image.top + last_image.height + [image.spacing,  last_image.spacing].max
-          #   last_image = image
-          # end
         end
         
-        # Fetches the Sprite::Image object for the supplied name
-        def image_for(name)
-          @images.detect { |img| img.name == name}
-        end
         
-        # Returns true if the image name has a hover selector image
-        def has_hover?(name)
-          !image_for("#{name}_hover").nil?
-        end
-        
-        # Returns true if the image name has a target selector image
-        def has_target?(name)
-          !image_for("#{name}_target").nil?
-        end
-        
-        # Returns true if the image name has an active selector image
-        def has_active?(name)
-          !image_for("#{name}_active").nil?
-        end
-        
-        # Return and array of image names that make up this sprite
-        def sprite_names
-          image_names.map { |f| File.basename(f, '.png') }
-        end
-
 
         # Validates that the sprite_names are valid sass
         def validate!

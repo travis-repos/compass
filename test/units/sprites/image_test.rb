@@ -19,7 +19,7 @@ class SpritesImageTest < Test::Unit::TestCase
   let(:sprite_name) { File.basename(sprite_filename, '.png') }
   
   def parent
-    map = Compass::SpriteMap.new(:uri => "selectors/*.png", :options => options)
+    map = Compass::SpriteMap.new(:uri => "selectors/*.png", :options => {'cleanup' => Sass::Script::Bool.new(true), 'smart_pack' => Sass::Script::Bool.new(false)})
     @parent ||= Compass::SassExtensions::Sprites::Base.new(map.sprite_names.map{|n| "selectors/#{n}.png"}, map, map.sass_engine, map.options)
   end
   
@@ -30,6 +30,7 @@ class SpritesImageTest < Test::Unit::TestCase
     options.stubs(:get_var).with("#{sprite_name}-repeat").returns(::OpenStruct.new(:value => @repeat))
     options.stubs(:get_var).with("#{sprite_name}-spacing").returns(::OpenStruct.new(:value => @spacing))
     options.stubs(:get_var).with("#{sprite_name}-position").returns(::OpenStruct.new(:value => @position))
+    options.stubs(:get_var).with('smart_pack').returns(Sass::Script::Bool.new(false))
     options
   end
   

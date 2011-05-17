@@ -1,7 +1,7 @@
 require 'test_helper'
 
 class SpritesBaseTest < Test::Unit::TestCase
-  
+  attr_accessor :options
   def setup
     Hash.send(:include, Compass::SassExtensions::Functions::Sprites::VariableReader)
     @images_src_path = File.join(File.dirname(__FILE__), '..', '..', 'fixtures', 'sprites', 'public', 'images')
@@ -11,12 +11,12 @@ class SpritesBaseTest < Test::Unit::TestCase
     config.images_path = @images_tmp_path
     Compass.add_configuration(config)
     Compass.configure_sass_plugin!
-    @options = {'cleanup' => Sass::Script::Bool.new(true)}
+    @options = {'cleanup' => Sass::Script::Bool.new(true), 'smart_pack' => Sass::Script::Bool.new(false)}
     setup_map
   end
   
   def setup_map
-    @map = Compass::SpriteMap.new(:uri => "selectors/*.png", :options => @options)
+    @map = Compass::SpriteMap.new(:uri => "selectors/*.png", :options => options)
     @base = Compass::SassExtensions::Sprites::Base.new(@map.sprite_names.map{|n| "selectors/#{n}.png"}, @map, @map.sass_engine, @map.options)
   end
 
