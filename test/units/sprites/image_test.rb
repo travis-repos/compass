@@ -3,7 +3,6 @@ require 'mocha'
 require 'ostruct'
 class SpritesImageTest < Test::Unit::TestCase
 
-
   def setup
     @images_src_path = File.join(File.dirname(__FILE__), '..', '..', 'fixtures', 'sprites', 'public', 'images')
     file = StringIO.new("images_path = #{@images_src_path.inspect}\n")
@@ -19,8 +18,8 @@ class SpritesImageTest < Test::Unit::TestCase
   let(:sprite_name) { File.basename(sprite_filename, '.png') }
   
   def parent
-    map = Compass::SpriteMap.new(:uri => "selectors/*.png", :options => {'cleanup' => Sass::Script::Bool.new(true), 'smart_pack' => Sass::Script::Bool.new(false)})
-    @parent ||= Compass::SassExtensions::Sprites::Base.new(map.sprite_names.map{|n| "selectors/#{n}.png"}, map, map.sass_engine, map.options)
+    importer = Compass::SpriteImporter.new(:uri => "selectors/*.png", :options => options)
+    @parent ||= Compass::SassExtensions::Sprites::SpriteMap.new(importer.sprite_names.map{|n| "selectors/#{n}.png"}, importer.path, importer.name, importer.sass_engine, importer.options)
   end
   
   let(:options) do
