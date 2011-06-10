@@ -17,11 +17,6 @@ class ImageRowTest < Test::Unit::TestCase
     @image_row = Compass::SassExtensions::Sprites::ImageRow.new(max)
   end
   
-  def teardown
-    
-  end
-  
-  
   def populate_row
     @images.each do |image|
       assert @image_row.add(image)
