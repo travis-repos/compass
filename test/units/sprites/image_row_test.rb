@@ -4,7 +4,7 @@ class ImageRowTest < Test::Unit::TestCase
   
   def setup
     @filenames = %w(large.png large_square.png medium.png tall.png small.png)
-    Compass.configuration.stubs(:images_path).returns('./')
+    Compass.configuration.stubs(:images_path).returns('/')
     @images_src_path = File.join(File.dirname(__FILE__), '..', '..', 'fixtures', 'sprites', 'public', 'images')
     @image_files = Dir["#{@images_src_path}/image_row/*.png"].sort
     @images = @image_files.map do |img|
